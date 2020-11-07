@@ -11,15 +11,36 @@ namespace WebServer
         PUT,
         DELETE
     }
+    /// <summary>
+    /// Api Endpoint ressources
+    /// </summary>
 
     public enum ApiFunctionNames
     {
         messages
     }
 
-    class Constant
+    /// <summary>
+    /// Server Constants
+    /// </summary>
+    public class Constant
     {
         public const string ServerName = "Server_404 Not Found";
         public const string DefaultHttpVersion = "HTTP/1.1";
+    }
+    
+    /// <summary>
+    /// Http StatusCodes
+    /// </summary>
+    public enum StatusCodes
+    {
+        OK = 200,
+        Created=201,
+        BadRequest = 400,
+        Unauthorized = 401,
+        Forbidden = 403,
+        NotFound = 404,
+        InternalServerError = 500,
+        NotImplemented = 501
     }
 }

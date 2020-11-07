@@ -8,33 +8,48 @@ using WebServer.API;
 
 namespace WebServer
 {
+    /// <summary>
+    /// Mime Types for response
+    /// </summary>
     public class MimeTypes
     {
         public const string HTML = "text/html; charset=UTF-8";
         public const string JSON = "application/json; charset=UTF-8";
     }
 
-    public enum StatusCodes
-    {
-        OK = 200,
-        Created=201,
-        BadRequest = 400,
-        Unauthorized = 401,
-        Forbidden = 403,
-        NotFound = 404,
-        InternalServerError = 500,
-        NotImplemented = 501
-    }
-
+    /// <summary>
+    /// ResponseContext for client
+    /// </summary>
     public class ResponseContext
     {
 
+        /// <summary>
+        /// MimeType of response
+        /// </summary>
         public string Mime { get; set; }
+        /// <summary>
+        /// StatusCode for HttpResponse
+        /// </summary>
         public StatusCodes StatusCode { get; set; } = StatusCodes.OK;
+        /// <summary>
+        /// List of Messages as attachment
+        /// </summary>
         public List<ResponseMessage> ResponseMessage { get; set; }
+        /// <summary>
+        /// Name of our Webserver
+        /// </summary>
         public string ServerName { get; set; }
+        /// <summary>
+        /// Length of HttpResponse Payload
+        /// </summary>
         private int ContentLength { get; set; }
+        /// <summary>
+        /// Payload
+        /// </summary>
         private string HttpBody { get; set; }
+        /// <summary>
+        /// HttpHeader
+        /// </summary>
 
         private string ResponseHeader { get; set; }
 
@@ -47,6 +62,9 @@ namespace WebServer
             ResponseMessage = new List<ResponseMessage>();
         }
 
+        /// <summary>
+        /// Building Response header depending on Payload
+        /// </summary>
         private void BuildHeader()
         {
             ResponseHeader = $"{Constant.DefaultHttpVersion} {(int) StatusCode}\r\n" +
@@ -57,6 +75,10 @@ namespace WebServer
                         +$"Content-Length: {ContentLength}\r\n\r\n";
         }
 
+        /// <summary>
+        /// Returns a string containing header and payload if a payload exists
+        /// </summary>
+        /// <returns>string for httpResponse</returns>
         public string BuildResponse()
         {
             if (ResponseMessage.Count > 0)
