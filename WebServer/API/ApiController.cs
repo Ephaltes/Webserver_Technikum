@@ -53,7 +53,8 @@ namespace WebServer.API
             Log.Debug($"Received:\r\n{data}");
             // Process the data sent by the client.
             
-            _requestContext = new RequestContext(data);
+            _requestContext = new RequestContext();
+            _requestContext.ParseRequestFromHeader(data);
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using WebServer.Model;
 
 namespace WebServer.RessourcenHandler
 {
-    public class MessageHandler : IRessourceHandler
+    public class MessageHandler : BaseRessourceHandler
     {
 
         private RequestContext _requestContext;
@@ -23,7 +23,7 @@ namespace WebServer.RessourcenHandler
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException">is thrown when HttpVerb is not implemented</exception>
-        public ResponseContext Handle()
+        public override  ResponseContext Handle()
         {
             ResponseContext responseContext;
             switch (_requestContext.HttpMethod)
@@ -81,17 +81,6 @@ namespace WebServer.RessourcenHandler
             List<Message> msgList = _messageModel.GetMessages();
             List<ResponseMessage> ret = new List<ResponseMessage>();
 
-            if (msgList.Count == 0)
-            {
-                ret.Add(new ResponseMessage()
-                {
-                    ErrorMessage = "Message not Found",
-                    Status = StatusCodes.NotFound
-                });
-                return ret;
-            }
-
-
             foreach (Message msg in msgList)
             {
 
@@ -104,7 +93,7 @@ namespace WebServer.RessourcenHandler
             return ret;
         }
 
-        public ResponseContext HandleGet()
+        protected override ResponseContext HandleGet()
         {
             ResponseContext responseContext = new ResponseContext();
             if (_requestContext.HttpRequest.Count == 1)
@@ -121,7 +110,7 @@ namespace WebServer.RessourcenHandler
             return responseContext;
         }
 
-        public ResponseContext HandlePost()
+        protected override  ResponseContext HandlePost()
         {
             ResponseContext responseContext = new ResponseContext();
             if (String.IsNullOrWhiteSpace(_requestContext.HttpBody))
@@ -136,7 +125,7 @@ namespace WebServer.RessourcenHandler
             return responseContext;
         }
 
-        public ResponseContext HandlePut()
+        protected override  ResponseContext HandlePut()
         {
             ResponseContext responseContext = new ResponseContext();
             if (String.IsNullOrWhiteSpace(_requestContext.HttpBody))
@@ -165,7 +154,7 @@ namespace WebServer.RessourcenHandler
             return responseContext;
         }
 
-        public ResponseContext HandleDelete()
+        protected override  ResponseContext HandleDelete()
         {
             ResponseContext responseContext = new ResponseContext();
             int id = Convert.ToInt32(_requestContext.HttpRequest[1]);
