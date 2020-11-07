@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Events;
+using WebServer.API;
 
 namespace WebServer
 {
@@ -15,8 +20,12 @@ namespace WebServer
 
         static void Main(string[] args)
         {
+
+            StartLogger();
+
             TcpListener server = null;
             List<Task> taskList = new List<Task>();
+
 
             try
             {
@@ -34,7 +43,7 @@ namespace WebServer
 
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.Error($"{e.Message}\r\n{e.InnerException?.Message}");
             }
 
             #endregion
@@ -44,18 +53,35 @@ namespace WebServer
                 server?.Stop();
                 Task.WaitAll(taskList.ToArray());
             }
-            Console.WriteLine("Server stopped...");
+            Log.Debug("Server stopped...");
             Console.ReadLine();
+        }
+
+        private static void StartLogger()
+        {
+            string logfile = Directory.GetCurrentDirectory() + "/log.txt";
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Debug()
+                .WriteTo.Console(
+                    LogEventLevel.Verbose,
+                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] ({CorrelationToken}) {Message}{NewLine}{Exception}")
+                .WriteTo.File(logfile, LogEventLevel.Verbose,
+                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] ({CorrelationToken}) {Message}{NewLine}{Exception}", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
         }
 
         public static void HandleClient(TcpListener server)
         {
-            Console.WriteLine("Waiting for a connection... ");
+            Log.Debug("Waiting for a connection... ");
             TcpClient client = server.AcceptTcpClient();
-            Console.WriteLine($"Client {client.Client.RemoteEndPoint} connected");
-            RequestContext requestContext = new RequestContext(client);
+            Log.Debug($"Client {client.Client.RemoteEndPoint} connected");
 
-            Console.WriteLine($"Client {client.Client.RemoteEndPoint} disconnected");
+            ApiController controller = new ApiController(client);
+            controller.ResponseToClient();
+
+            Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
             client.Close();
             semaphore.Release();
         }
