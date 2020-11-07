@@ -7,7 +7,9 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using Serilog;
+using WebServer.Interface;
 using WebServer.Model;
+using TcpClient = WebServer.Model.TcpClient;
 
 namespace WebServer.API
 {
@@ -31,10 +33,10 @@ namespace WebServer.API
         /// <summary>
         /// Client that requested ressource
         /// </summary>
-        private TcpClient _client;
+        private ITcpClient _client;
 
 
-        public ApiController(TcpClient client)
+        public ApiController(ITcpClient client)
         {
             _client = client;
             ReceiveFromClient();
@@ -45,15 +47,7 @@ namespace WebServer.API
         /// </summary>
         private void ReceiveFromClient()
         {
-            var stream = _client.GetStream();
-            string data = "";
-            do
-            {
-                Byte[] bytes = new Byte[4096];
-                int i = stream.Read(bytes, 0, bytes.Length);
-                // Translate data bytes to a ASCII string.
-                data += System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-            } while (stream.DataAvailable);
+            string data = _client.ReadToEnd();
 
             Log.Debug($"Received:\r\n{data}");
             // Process the data sent by the client.
