@@ -10,12 +10,13 @@ using WebServer.Interface;
 
 namespace WebServer.Model
 {
-    public class ServerModell : IServer
+    public class ServerModell : IServer , IDisposable
     {
         private SemaphoreSlim _semaphore;
         private readonly TcpListener _listener;
         private readonly List<Task> _taskList;
         public List<Task> taskList => _taskList;
+        public bool IsRunning { get; set; } = false;
 
 
         public ServerModell(IPAddress ipAddress ,int port)
@@ -26,16 +27,21 @@ namespace WebServer.Model
         
         public void Start()
         {
-            _listener.Start();
+           _listener.Start();
+           IsRunning = true;
         }
 
         public void Stop()
         {
             _listener.Stop();
+            IsRunning = false;
         }
 
         public void Listen(int maxClient)
         {
+            if(!IsRunning)
+                Start();
+            
             _semaphore = new SemaphoreSlim(maxClient);
             while (true)
             {
@@ -64,6 +70,12 @@ namespace WebServer.Model
                 Console.WriteLine(e);
             }
             _semaphore.Release();
+        }
+
+        public void Dispose()
+        {
+            _semaphore?.Dispose();
+            _listener.Stop();
         }
     }
 }

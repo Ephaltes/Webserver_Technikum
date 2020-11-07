@@ -42,7 +42,7 @@ namespace WebServerUnitTests
 
             var response = handler.Handle();
             
-            Assert.That(response.StatusCode == StatusCodes.OK && response.ResponseMessage.Count==0);
+            Assert.That(response.StatusCode == StatusCodes.OK);
         }
         
         [Test]

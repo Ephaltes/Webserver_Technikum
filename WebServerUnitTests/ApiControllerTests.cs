@@ -44,7 +44,7 @@ namespace WebServerUnitTests
         public void ForwardToUnknownHandler()
         {
             string header =
-                "POST /unknown HTTP/1.1\r\n" +
+                "POST / HTTP/1.1\r\n" +
                 "Host: 127.0.0.1:6145\r\n" +
                 "Connection: keep-alive\r\n" +
                 "DNT: 1\r\n" +
