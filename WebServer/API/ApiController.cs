@@ -109,7 +109,7 @@ namespace WebServer.API
         /// <returns></returns>
         private ApiFunctionNames GetRequestedEndPoint()
         {
-            if (!Enum.TryParse(_requestContext.HttpRequest[0], true, out ApiFunctionNames result))
+            if (_requestContext.HttpRequest.Count <= 0 || !Enum.TryParse(_requestContext.HttpRequest[0], true, out ApiFunctionNames result))
                 return ApiFunctionNames.unknown;
 
             return result;

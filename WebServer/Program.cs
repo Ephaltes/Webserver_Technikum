@@ -18,26 +18,19 @@ namespace WebServer
 {
     class Program
     {
-        static SemaphoreSlim semaphore = new SemaphoreSlim(5);
 
         static void Main(string[] args)
         {
             StartLogger();
 
-            TcpListener server = null;
-            List<Task> taskList = new List<Task>();
 
-
+            ServerModell server = null;
             try
             {
-                server = new TcpListener(IPAddress.Parse(AppSettings.Settings.Host), AppSettings.Settings.Port);
+                server = new ServerModell(IPAddress.Parse(AppSettings.Settings.Host),AppSettings.Settings.Port);
                 server.Start();
+                server.Listen(5);
 
-                while (true)
-                {
-                    semaphore.Wait();
-                    taskList.Add(Task.Run(() => HandleClient(server)));
-                }
             }
 
             #region catch
@@ -51,8 +44,11 @@ namespace WebServer
 
             finally
             {
-                server?.Stop();
-                Task.WaitAll(taskList.ToArray());
+                if(server != null)
+                {
+                    server.Stop();
+                    Task.WaitAll(server.taskList.ToArray()); 
+                }
             }
             Log.Debug("Server stopped...");
             Console.ReadLine();
@@ -71,27 +67,6 @@ namespace WebServer
                 .WriteTo.File(logfile, LogEventLevel.Verbose,
                     "{NewLine}{Timestamp:HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
-        }
-        
-        public static void HandleClient(TcpListener server)
-        {
-            Log.Debug("Waiting for a connection... ");
-            try
-            {
-                Model.TcpClient client = new Model.TcpClient(server.AcceptTcpClient());
-                Log.Debug($"Client {client.RemoteEndPoint} connected");
-
-                ApiController controller = new ApiController(client);
-                controller.Respond(controller.CreateResponse());
-
-                Log.Debug($"Client {client.RemoteEndPoint} disconnected\r\n");
-                client.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            semaphore.Release();
         }
     }
 }
