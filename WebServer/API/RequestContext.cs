@@ -25,7 +25,7 @@ namespace WebServer
         /// <summary>
         /// Ressource target
         /// </summary>
-        public string HttpRequest { get; set; }
+        public List<string> HttpRequest { get; set; }
         /// <summary>
         /// Http header except First row
         /// </summary>
@@ -56,7 +56,7 @@ namespace WebServer
             string[] splittedverb = header[HTTPVERB].Split(" ");
             Enum.TryParse(splittedverb[0], out HttpMethods methodTemp);
             HttpMethod = methodTemp;
-            HttpRequest = splittedverb[1];
+            HttpRequest = splittedverb[1].Split("/",StringSplitOptions.RemoveEmptyEntries).ToList();
             HttpVersion = splittedverb[2];
 
 

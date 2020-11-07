@@ -38,7 +38,7 @@ namespace WebServerUnitTests
         {
             string header = "GET /messages HTTP/1.1\r\nHost: 127.0.0.1:6145\r\nUser-Agent: curl/7.55.1\r\nAccept: */*\r\n\r\n";
             var requestContext = new RequestContext(header);
-            Assert.That(requestContext.HttpRequest.ToLower() == "/messages");
+            Assert.That(requestContext.HttpRequest[1].ToLower() == "messages");
         }
         
         [Test]
@@ -46,7 +46,7 @@ namespace WebServerUnitTests
         {
             string header = "GET / HTTP/1.1\r\nHost: 127.0.0.1:6145\r\nUser-Agent: curl/7.55.1\r\nAccept: */*\r\n\r\n";
             var requestContext = new RequestContext(header);
-            Assert.That(requestContext.HttpRequest == "/");
+            Assert.That(requestContext.HttpRequest.Count == 1);
         }
         
         [Test]

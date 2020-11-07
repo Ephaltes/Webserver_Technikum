@@ -17,7 +17,8 @@ namespace WebServer
 
     public enum ApiFunctionNames
     {
-        messages
+        unknown,
+        messages,
     }
 
     /// <summary>
