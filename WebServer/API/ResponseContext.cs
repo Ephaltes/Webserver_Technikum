@@ -34,15 +34,18 @@ namespace WebServer
         private int ContentLength { get; set; }
         public string HttpBody { get; set; }
 
+        private bool IsBrowser;
+
         private string sResponseHeader { get; set; }
 
 
-        public ResponseContext(TcpClient client)
+        public ResponseContext(TcpClient client, bool browser = true)
         {
             Client = client;
             Mime = MimeTypes.HTML;
             StatusCode = StatusCodes.OK;
             ServerName = Constant.ServerName;
+            IsBrowser = browser;
         }
 
         private void BuildResponse()
@@ -73,6 +76,8 @@ namespace WebServer
                 Log.Debug($"Response:\r\n{sResponseHeader}");
                 return;
             }
+            if(IsBrowser)
+                ConvertLineBreakToBrowser();
             byte[] data = Encoding.ASCII.GetBytes(HttpBody);
             ContentLength = HttpBody.Length;
             SendHeader();
@@ -81,6 +86,11 @@ namespace WebServer
             NetworkStream stream = Client.GetStream();
             stream.Write(data);
             Log.Debug($"Response:\r\n{sResponseHeader}\r\n {Encoding.ASCII.GetString(data)}");
+        }
+
+        public void ConvertLineBreakToBrowser()
+        {
+           HttpBody = HttpBody.Replace("\r\n","<br>");
         }
 
     }
