@@ -84,10 +84,10 @@ namespace WebServer.API
                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                 {
                     ErrorMessage = e.Message,
-                    Status = StatusCodes.BadRequest
+                    Status = StatusCodes.InternalServerError
                 });
 
-                _responseContext.StatusCode = StatusCodes.BadRequest;
+                _responseContext.StatusCode = StatusCodes.InternalServerError;
             }
 
             return _responseContext.BuildResponse();

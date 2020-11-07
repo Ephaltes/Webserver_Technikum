@@ -37,6 +37,12 @@ namespace WebServer
 
         private const int HTTPVERB = 0;
 
+
+        public RequestContext()
+        {
+            HttpRequest = new List<string>();
+        }
+
         /// <summary>
         /// Parsing Http key value pairs from header
         /// </summary>
