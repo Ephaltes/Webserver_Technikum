@@ -20,7 +20,7 @@ namespace WebServer.API
         public ApiController(TcpClient client)
         {
             _requestContext = new RequestContext(client);
-            _responseContext = new ResponseContext(client);
+            _responseContext = new ResponseContext(client,_requestContext.IsBrowser);
         }
 
         public void ResponseToClient()

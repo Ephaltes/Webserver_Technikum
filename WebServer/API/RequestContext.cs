@@ -16,6 +16,7 @@ namespace WebServer
         public string HttpRequest { get; set; }
         public Dictionary<string, string> HttpHeader { get; set; }
         public string HttpBody { get; set; }
+        public bool IsBrowser { get; set; } = true;
 
 
         private const int HTTPVERB = 0;
@@ -37,6 +38,16 @@ namespace WebServer
             data = data.ToUpper();
             string[] splittedData = data.Split("\r\n");
             ParseRequestFromHeader(splittedData);
+
+            foreach (string agent in Constant.ConsoleUserAgent)
+            {
+                if (HttpHeader.Any(a=>a.Value.Contains(agent)))
+                {
+                    IsBrowser = false;
+                    break;
+                }
+            }
+
         }
 
         private void ParseRequestFromHeader(string[] header)
