@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json;
 using Serilog;
+using WebServer.API;
 
 namespace WebServer
 {
@@ -29,10 +31,11 @@ namespace WebServer
         public byte[] ResponseHeader { get; set; }
         public TcpClient Client { get; set; }
         public string Mime { get; set; }
-        public StatusCodes StatusCode { get; set; }
+        public StatusCodes StatusCode { get; set; } = StatusCodes.OK;
+        public List<ResponseMessage> ResponseMessage { get; set; }
         public string ServerName { get; set; }
         private int ContentLength { get; set; }
-        public string HttpBody { get; set; }
+        private string HttpBody { get; set; }
 
         private bool IsBrowser;
 
@@ -46,6 +49,7 @@ namespace WebServer
             StatusCode = StatusCodes.OK;
             ServerName = Constant.ServerName;
             IsBrowser = browser;
+            ResponseMessage = new List<ResponseMessage>();
         }
 
         private void BuildResponse()
@@ -70,14 +74,23 @@ namespace WebServer
 
         public void ResponseToClient()
         {
+            if (ResponseMessage.Count > 0)
+            {
+                HttpBody = JsonConvert.SerializeObject(ResponseMessage,Formatting.Indented,new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+            }
+
             if (String.IsNullOrWhiteSpace(HttpBody))
             {
                 SendHeader();
                 Log.Debug($"Response:\r\n{sResponseHeader}");
                 return;
             }
-            if(IsBrowser)
-                ConvertLineBreakToBrowser();
+
+            //if(IsBrowser)
+              //  ConvertLineBreakToBrowser();
             byte[] data = Encoding.ASCII.GetBytes(HttpBody);
             ContentLength = HttpBody.Length;
             SendHeader();
@@ -88,7 +101,7 @@ namespace WebServer
             Log.Debug($"Response:\r\n{sResponseHeader}\r\n {Encoding.ASCII.GetString(data)}");
         }
 
-        public void ConvertLineBreakToBrowser()
+        private void ConvertLineBreakToBrowser()
         {
            HttpBody = HttpBody.Replace("\r\n","<br>");
         }

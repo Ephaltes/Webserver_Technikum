@@ -14,7 +14,7 @@ namespace WebServer.Model
         public List<Message> GetMessages();
         public Message GetMessage(int id);
 
-        public int Add(string message);
+        public Message Add(string message);
         public bool Delete(int id);
         public bool Update(int id, string message);
     }
