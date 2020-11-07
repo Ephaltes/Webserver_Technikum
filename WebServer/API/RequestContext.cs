@@ -16,38 +16,13 @@ namespace WebServer
         public string HttpRequest { get; set; }
         public Dictionary<string, string> HttpHeader { get; set; }
         public string HttpBody { get; set; }
-        public bool IsBrowser { get; set; } = true;
-
 
         private const int HTTPVERB = 0;
 
-        public RequestContext(TcpClient client)
+        public RequestContext(string httpRequest)
         {
-            NetworkStream stream = client.GetStream();
-            string data = "";
-            do
-            {
-                Byte[] bytes = new Byte[4096];
-                int i = stream.Read(bytes, 0, bytes.Length);
-                // Translate data bytes to a ASCII string.
-                data += System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-            } while (stream.DataAvailable);
-
-            Log.Debug($"Received:\r\n{data}");
-            // Process the data sent by the client.
-            data = data.ToUpper();
-            string[] splittedData = data.Split("\r\n");
+            string[] splittedData = httpRequest.Split("\r\n");
             ParseRequestFromHeader(splittedData);
-
-            foreach (string agent in Constant.ConsoleUserAgent)
-            {
-                if (HttpHeader.Any(a=>a.Value.Contains(agent)))
-                {
-                    IsBrowser = false;
-                    break;
-                }
-            }
-
         }
 
         private void ParseRequestFromHeader(string[] header)
@@ -57,17 +32,32 @@ namespace WebServer
             HttpMethod = methodTemp;
             HttpRequest = splittedverb[1];
             HttpVersion = splittedverb[2];
-            HttpBody = header.Last();
+
 
             HttpHeader = new Dictionary<string, string>();
 
-            for (int i = 1; i < header.Length - 1; i++)
+            bool isBody = false;
+
+            for (int i = 1; i < header.Length; i++)
             {
                 if (String.IsNullOrWhiteSpace(header[i]))
+                {
+                    isBody = true;
                     continue;
+                }
 
-                string[] temp = header[i].Split(":", 2);
-                HttpHeader.Add(temp[0], temp[1]);
+                if (!isBody)
+                {
+                    string[] temp = header[i].Split(":", 2);
+                    HttpHeader.Add(temp[0], temp[1]);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(HttpBody))
+                        HttpBody += "\r\n";
+                    HttpBody += $"{header[i]}";
+                }
+
             }
 
         }

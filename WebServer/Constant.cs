@@ -21,6 +21,5 @@ namespace WebServer
     {
         public const string ServerName = "Server_404 Not Found";
         public const string DefaultHttpVersion = "HTTP/1.1";
-        public static readonly string[] ConsoleUserAgent = {"CURL", "POSTMAN"};
     }
 }

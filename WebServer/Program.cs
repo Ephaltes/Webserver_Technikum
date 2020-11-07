@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http.Headers;
@@ -20,7 +21,6 @@ namespace WebServer
 
         static void Main(string[] args)
         {
-
             StartLogger();
 
             TcpListener server = null;
@@ -79,6 +79,7 @@ namespace WebServer
             Log.Debug($"Client {client.Client.RemoteEndPoint} connected");
 
             ApiController controller = new ApiController(client);
+            controller.ReceiveFromClient();
             controller.ResponseToClient();
 
             Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
