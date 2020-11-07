@@ -17,7 +17,7 @@ namespace WebServer
 {
     class Program
     {
-        static SemaphoreSlim semaphore = new SemaphoreSlim(5);
+        static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         static void Main(string[] args)
         {
@@ -66,24 +66,31 @@ namespace WebServer
                 .MinimumLevel.Debug()
                 .WriteTo.Console(
                     LogEventLevel.Verbose,
-                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] ({CorrelationToken}) {Message}{NewLine}{Exception}")
+                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}")
                 .WriteTo.File(logfile, LogEventLevel.Verbose,
-                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] ({CorrelationToken}) {Message}{NewLine}{Exception}", rollingInterval: RollingInterval.Day)
+                    "{NewLine}{Timestamp:HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
         }
-
+        
         public static void HandleClient(TcpListener server)
         {
             Log.Debug("Waiting for a connection... ");
-            TcpClient client = server.AcceptTcpClient();
-            Log.Debug($"Client {client.Client.RemoteEndPoint} connected");
+            try
+            {
+                TcpClient client = server.AcceptTcpClient();
+                Log.Debug($"Client {client.Client.RemoteEndPoint} connected");
 
-            ApiController controller = new ApiController(client);
-            controller.ReceiveFromClient();
-            controller.ResponseToClient();
+                ApiController controller = new ApiController(client);
+                var responseMessage = controller.CreateResponse();
+                controller.Respond(responseMessage);
 
-            Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
-            client.Close();
+                client.Close();
+                Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             semaphore.Release();
         }
     }

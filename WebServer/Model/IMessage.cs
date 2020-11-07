@@ -9,6 +9,9 @@ namespace WebServer.Model
         public int id;
         public string message;
     }
+    /// <summary>
+    /// Crud interface for a message
+    /// </summary>
     public interface IMessage
     {
         public List<Message> GetMessages();

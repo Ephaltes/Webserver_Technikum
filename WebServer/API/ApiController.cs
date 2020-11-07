@@ -11,20 +11,39 @@ using WebServer.Model;
 
 namespace WebServer.API
 {
+    /// <summary>
+    /// Class that Controls requestContext & responseContext by using MessageModel
+    /// </summary>
     public class ApiController
     {
+        /// <summary>
+        /// HttpRequest Context
+        /// </summary>
         private  RequestContext _requestContext;
+        /// <summary>
+        /// HttpResponse 
+        /// </summary>
         private  ResponseContext _responseContext;
-        private static readonly MessageModel MsgController = new MessageModel();
+        /// <summary>
+        /// In Memory MessageList
+        /// </summary>
+        private static readonly MessageModel MsgModel = new MessageModel();
+        /// <summary>
+        /// Client that requested ressource
+        /// </summary>
         private TcpClient _client;
 
 
         public ApiController(TcpClient client)
         {
             _client = client;
+            ReceiveFromClient();
         }
 
-        public void ReceiveFromClient()
+        /// <summary>
+        /// Reading from Client and passing into requestContext for parsing
+        /// </summary>
+        private void ReceiveFromClient()
         {
             var stream = _client.GetStream();
             string data = "";
@@ -42,7 +61,14 @@ namespace WebServer.API
             _requestContext = new RequestContext(data);
         }
 
-        public void ResponseToClient()
+        /// <summary>
+        /// Creates Response string depending on ressource and HttpMethod
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException">Throwen when a ressource is not recognized</exception>
+        /// <exception cref="TargetParameterCountException">Wrong Parameter Count entered</exception>
+        /// <exception cref="InvalidDataException">When no HttpBody is entered</exception>
+        public string CreateResponse()
         {
             _responseContext = new ResponseContext();
             try
@@ -81,7 +107,7 @@ namespace WebServer.API
 
                             _responseContext.ResponseMessage.Add(new ResponseMessage()
                             {
-                                Object = MsgController.Add(_requestContext.HttpBody),
+                                Object = MsgModel.Add(_requestContext.HttpBody),
                                 Status = StatusCodes.Created
                             });
                             _responseContext.StatusCode = StatusCodes.Created;
@@ -95,7 +121,7 @@ namespace WebServer.API
                                 throw new InvalidDataException("No HttpBody received for Post");
 
                             int id = Convert.ToInt32(splittedRequest[1]);
-                            if (MsgController.Update(id, _requestContext.HttpBody))
+                            if (MsgModel.Update(id, _requestContext.HttpBody))
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
@@ -122,7 +148,7 @@ namespace WebServer.API
                         if (splittedRequest[0].ToLower() == ApiFunctionNames.messages.ToString())
                         {
                             int id = Convert.ToInt32(splittedRequest[1]);
-                            if (MsgController.Delete(id))
+                            if (MsgModel.Delete(id))
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
@@ -154,21 +180,33 @@ namespace WebServer.API
                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                 {
                     ErrorMessage = e.Message,
-                    Status = StatusCodes.NotImplemented
+                    Status = StatusCodes.BadRequest
                 });
 
-                _responseContext.StatusCode = StatusCodes.NotImplemented;
+                _responseContext.StatusCode = StatusCodes.BadRequest;
             }
 
-
-            string response = _responseContext.BuildResponse();
-            var stream = _client.GetStream();
-            stream.Write(Encoding.ASCII.GetBytes(response));
+            return _responseContext.BuildResponse();
         }
 
+        /// <summary>
+        /// Writes message to client 
+        /// </summary>
+        /// <param name="msg">message to send to client</param>
+        public void Respond(string msg)
+        {
+            var stream = _client.GetStream();
+            stream.Write(Encoding.ASCII.GetBytes(msg));
+        }
+
+        /// <summary>
+        /// Displays a single message 
+        /// </summary>
+        /// <param name="id">id of Message to be shown</param>
+        /// <returns>Message object</returns>
         private ResponseMessage DisplayMessage(int id)
         {
-            Message msg = MsgController.GetMessage(id);
+            Message msg = MsgModel.GetMessage(id);
 
             if (msg == null)
             {
@@ -186,9 +224,13 @@ namespace WebServer.API
             };
         }
 
+        /// <summary>
+        /// Get a list of all messages
+        /// </summary>
+        /// <returns>List of messages</returns>
         private List<ResponseMessage> DisplayMessages()
         {
-            List<Message> msgList = MsgController.GetMessages();
+            List<Message> msgList = MsgModel.GetMessages();
             List<ResponseMessage> ret = new List<ResponseMessage>();
 
             if (msgList.Count == 0)

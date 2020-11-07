@@ -9,22 +9,48 @@ using Serilog;
 namespace WebServer
 {
 
+    /// <summary>
+    /// Class for receiving HttpRequest
+    /// </summary>
     public class RequestContext
     {
+        /// <summary>
+        /// HttpVersion in request
+        /// </summary>
         public string HttpVersion { get; set; }
+        /// <summary>
+        /// HttpVerb
+        /// </summary>
         public HttpMethods HttpMethod { get; set; }
+        /// <summary>
+        /// Ressource target
+        /// </summary>
         public string HttpRequest { get; set; }
+        /// <summary>
+        /// Http header except First row
+        /// </summary>
         public Dictionary<string, string> HttpHeader { get; set; }
+        /// <summary>
+        /// HttpPayload
+        /// </summary>
         public string HttpBody { get; set; }
 
         private const int HTTPVERB = 0;
 
+        /// <summary>
+        /// Ctor Parsing Header
+        /// </summary>
+        /// <param name="httpRequest">HttpHeader+Payload/HttpRequest</param>
         public RequestContext(string httpRequest)
         {
             string[] splittedData = httpRequest.Split("\r\n");
             ParseRequestFromHeader(splittedData);
         }
 
+        /// <summary>
+        /// Parsing Http key value pairs from header
+        /// </summary>
+        /// <param name="header">HttpHeader+Payload/HttpRequest</param>
         private void ParseRequestFromHeader(string[] header)
         {
             string[] splittedverb = header[HTTPVERB].Split(" ");
@@ -61,37 +87,5 @@ namespace WebServer
             }
 
         }
-
-        private void GetRequestFromHeader(string httpverb)
-        {
-            HttpRequest = httpverb.Split(" ")[1];
-        }
-
-        private void GetHttpMethodFromHeader(string httpverb)
-        {
-            if (httpverb.Contains(HttpMethods.GET.ToString()))
-            {
-                HttpMethod = HttpMethods.GET;
-                return;
-            }
-
-            if (httpverb.Contains(HttpMethods.POST.ToString()))
-            {
-                HttpMethod = HttpMethods.POST;
-                return;
-            }
-
-            if (httpverb.Contains(HttpMethods.PUT.ToString()))
-            {
-                HttpMethod = HttpMethods.PUT;
-                return;
-            }
-
-            if (httpverb.Contains(HttpMethods.DELETE.ToString()))
-            {
-                HttpMethod = HttpMethods.DELETE;
-            }
-        }
-
     }
 }
