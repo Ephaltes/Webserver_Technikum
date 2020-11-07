@@ -82,8 +82,7 @@ namespace WebServer
                 Log.Debug($"Client {client.RemoteEndPoint} connected");
 
                 ApiController controller = new ApiController(client);
-                var responseMessage = controller.CreateResponse();
-                controller.Respond(responseMessage);
+                controller.Respond(controller.CreateResponse());
 
                 Log.Debug($"Client {client.RemoteEndPoint} disconnected\r\n");
                 client.Close();

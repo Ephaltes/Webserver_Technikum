@@ -25,7 +25,7 @@ namespace WebServer
         /// <summary>
         /// Ressource target
         /// </summary>
-        public string HttpRequest { get; set; }
+        public List<string> HttpRequest { get; set; }
         /// <summary>
         /// Http header except First row
         /// </summary>
@@ -38,25 +38,17 @@ namespace WebServer
         private const int HTTPVERB = 0;
 
         /// <summary>
-        /// Ctor Parsing Header
-        /// </summary>
-        /// <param name="httpRequest">HttpHeader+Payload/HttpRequest</param>
-        public RequestContext(string httpRequest)
-        {
-            string[] splittedData = httpRequest.Split("\r\n");
-            ParseRequestFromHeader(splittedData);
-        }
-
-        /// <summary>
         /// Parsing Http key value pairs from header
         /// </summary>
-        /// <param name="header">HttpHeader+Payload/HttpRequest</param>
-        private void ParseRequestFromHeader(string[] header)
+        /// <param name="httpRequest">/HttpRequest</param>
+        public void ParseRequestFromHeader(string httpRequest)
         {
+            string[] header = httpRequest.Split("\r\n");
+            
             string[] splittedverb = header[HTTPVERB].Split(" ");
             Enum.TryParse(splittedverb[0], out HttpMethods methodTemp);
             HttpMethod = methodTemp;
-            HttpRequest = splittedverb[1];
+            HttpRequest = splittedverb[1].Split("/",StringSplitOptions.RemoveEmptyEntries).ToList();
             HttpVersion = splittedverb[2];
 
 
