@@ -9,7 +9,7 @@ namespace WebServer.Model
         public int id;
         public string message;
     }
-    public interface IMessageController
+    public interface IMessage
     {
         public List<Message> GetMessages();
         public Message GetMessage(int id);

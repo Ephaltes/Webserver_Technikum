@@ -6,25 +6,45 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using Serilog;
 using WebServer.Model;
 
 namespace WebServer.API
 {
     public class ApiController
     {
-        private readonly RequestContext _requestContext;
-        private readonly ResponseContext _responseContext;
+        private  RequestContext _requestContext;
+        private  ResponseContext _responseContext;
         private static readonly MessageModel MsgController = new MessageModel();
+        private TcpClient _client;
 
 
         public ApiController(TcpClient client)
         {
-            _requestContext = new RequestContext(client);
-            _responseContext = new ResponseContext(client, _requestContext.IsBrowser);
+            _client = client;
+        }
+
+        public void ReceiveFromClient()
+        {
+            var stream = _client.GetStream();
+            string data = "";
+            do
+            {
+                Byte[] bytes = new Byte[4096];
+                int i = stream.Read(bytes, 0, bytes.Length);
+                // Translate data bytes to a ASCII string.
+                data += System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+            } while (stream.DataAvailable);
+
+            Log.Debug($"Received:\r\n{data}");
+            // Process the data sent by the client.
+            
+            _requestContext = new RequestContext(data);
         }
 
         public void ResponseToClient()
         {
+            _responseContext = new ResponseContext();
             try
             {
                 var splitted = _requestContext.HttpRequest.Split("/");
@@ -62,7 +82,7 @@ namespace WebServer.API
                             _responseContext.ResponseMessage.Add(new ResponseMessage()
                             {
                                 Object = MsgController.Add(_requestContext.HttpBody),
-                                Status = ResponseStatus.Success
+                                Status = StatusCodes.Created
                             });
                             _responseContext.StatusCode = StatusCodes.Created;
                         }
@@ -79,7 +99,7 @@ namespace WebServer.API
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
-                                    Status = ResponseStatus.Success,
+                                    Status = StatusCodes.OK,
                                     Id = id
                                 });
                                 _responseContext.StatusCode = StatusCodes.OK;
@@ -88,11 +108,11 @@ namespace WebServer.API
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
-                                    Status = ResponseStatus.Failed,
+                                    Status = StatusCodes.NotFound,
                                     Id = id,
                                     ErrorMessage = "MessageId not found"
                                 });
-                                _responseContext.StatusCode = StatusCodes.BadRequest;
+                                _responseContext.StatusCode = StatusCodes.NotFound;
                             }
 
                         }
@@ -106,7 +126,7 @@ namespace WebServer.API
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
-                                    Status = ResponseStatus.Success,
+                                    Status = StatusCodes.OK,
                                     Id = id
                                 });
                                 _responseContext.StatusCode = StatusCodes.OK;
@@ -116,11 +136,11 @@ namespace WebServer.API
                             {
                                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                                 {
-                                    Status = ResponseStatus.Success,
+                                    Status = StatusCodes.NotFound,
                                     ErrorMessage = "Message not found",
                                     Id = id
                                 });
-                                _responseContext.StatusCode = StatusCodes.BadRequest;
+                                _responseContext.StatusCode = StatusCodes.NotFound;
                             }
                         }
                         break;
@@ -134,14 +154,16 @@ namespace WebServer.API
                 _responseContext.ResponseMessage.Add(new ResponseMessage()
                 {
                     ErrorMessage = e.Message,
-                    Status = ResponseStatus.Failed
+                    Status = StatusCodes.NotImplemented
                 });
 
                 _responseContext.StatusCode = StatusCodes.NotImplemented;
             }
 
 
-            _responseContext.ResponseToClient();
+            string response = _responseContext.BuildResponse();
+            var stream = _client.GetStream();
+            stream.Write(Encoding.ASCII.GetBytes(response));
         }
 
         private ResponseMessage DisplayMessage(int id)
@@ -153,14 +175,14 @@ namespace WebServer.API
                 return new ResponseMessage()
                 {
                     ErrorMessage = "Message not Found",
-                    Status = ResponseStatus.Failed
+                    Status = StatusCodes.BadRequest
                 };
             }
 
             return new ResponseMessage()
             {
                 Object = msg,
-                Status = ResponseStatus.Success
+                Status = StatusCodes.OK
             };
         }
 
@@ -174,7 +196,7 @@ namespace WebServer.API
                 ret.Add(new ResponseMessage()
                 {
                     ErrorMessage = "Message not Found",
-                    Status = ResponseStatus.Failed
+                    Status = StatusCodes.NotFound
                 });
                 return ret;
             }
@@ -185,7 +207,7 @@ namespace WebServer.API
 
                 ret.Add(new ResponseMessage()
                 {
-                    Status = ResponseStatus.Success,
+                    Status = StatusCodes.OK,
                     Object = msg,
                 });
             }

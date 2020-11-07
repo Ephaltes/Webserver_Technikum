@@ -11,6 +11,7 @@ namespace WebServer
     public class MimeTypes
     {
         public const string HTML = "text/html; charset=UTF-8";
+        public const string JSON = "application/json; charset=UTF-8";
     }
 
     public enum StatusCodes
@@ -28,8 +29,6 @@ namespace WebServer
     public class ResponseContext
     {
 
-        public byte[] ResponseHeader { get; set; }
-        public TcpClient Client { get; set; }
         public string Mime { get; set; }
         public StatusCodes StatusCode { get; set; } = StatusCodes.OK;
         public List<ResponseMessage> ResponseMessage { get; set; }
@@ -37,42 +36,28 @@ namespace WebServer
         private int ContentLength { get; set; }
         private string HttpBody { get; set; }
 
-        private bool IsBrowser;
-
-        private string sResponseHeader { get; set; }
+        private string ResponseHeader { get; set; }
 
 
-        public ResponseContext(TcpClient client, bool browser = true)
+        public ResponseContext()
         {
-            Client = client;
-            Mime = MimeTypes.HTML;
+            Mime = MimeTypes.JSON;
             StatusCode = StatusCodes.OK;
             ServerName = Constant.ServerName;
-            IsBrowser = browser;
             ResponseMessage = new List<ResponseMessage>();
         }
 
-        private void BuildResponse()
+        private void BuildHeader()
         {
-            sResponseHeader = $"{Constant.DefaultHttpVersion} {(int) StatusCode}\r\n" +
+            ResponseHeader = $"{Constant.DefaultHttpVersion} {(int) StatusCode}\r\n" +
                               $"Server: {ServerName}\r\n";
 
             if (ContentLength > 0)
-                sResponseHeader += $"Content-Type: {Mime}\r\n"
+                ResponseHeader += $"Content-Type: {Mime}\r\n"
                         +$"Content-Length: {ContentLength}\r\n\r\n";
-
-            ResponseHeader = Encoding.ASCII.GetBytes(sResponseHeader);
-
         }
 
-        private void SendHeader()
-        {
-            BuildResponse();
-            NetworkStream stream = Client.GetStream();
-            stream.Write(ResponseHeader);
-        }
-
-        public void ResponseToClient()
+        public string BuildResponse()
         {
             if (ResponseMessage.Count > 0)
             {
@@ -80,31 +65,20 @@ namespace WebServer
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
+                
+                ContentLength = HttpBody.Length;
             }
+            
+            BuildHeader();
 
-            if (String.IsNullOrWhiteSpace(HttpBody))
+            if (ContentLength == 0)
             {
-                SendHeader();
-                Log.Debug($"Response:\r\n{sResponseHeader}");
-                return;
+                Log.Debug($"Response:\r\n{ResponseHeader}");
+                return ResponseHeader;
             }
-
-            //if(IsBrowser)
-              //  ConvertLineBreakToBrowser();
-            byte[] data = Encoding.ASCII.GetBytes(HttpBody);
-            ContentLength = HttpBody.Length;
-            SendHeader();
-
-
-            NetworkStream stream = Client.GetStream();
-            stream.Write(data);
-            Log.Debug($"Response:\r\n{sResponseHeader}\r\n {Encoding.ASCII.GetString(data)}");
+            
+            Log.Debug($"Response:\r\n{ResponseHeader}\r\n {HttpBody}");
+            return ResponseHeader + HttpBody;
         }
-
-        private void ConvertLineBreakToBrowser()
-        {
-           HttpBody = HttpBody.Replace("\r\n","<br>");
-        }
-
     }
 }

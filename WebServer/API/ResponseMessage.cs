@@ -4,17 +4,12 @@ using System.Text;
 
 namespace WebServer.API
 {
-    public enum ResponseStatus
-    {
-        Success=100,
-        Failed=400
-    }
 
     public class ResponseMessage
     {
         public string ErrorMessage;
         public object Object;
-        public ResponseStatus Status=ResponseStatus.Success;
+        public StatusCodes Status=StatusCodes.OK;
         public int? Id;
 
     }

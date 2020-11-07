@@ -6,7 +6,7 @@ using Serilog.Events;
 
 namespace WebServer.Model
 {
-    public class MessageModel : IMessageController
+    public class MessageModel : IMessage
     {
         private readonly List<Message> messageList;
         private int lastid;
