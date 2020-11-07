@@ -9,7 +9,7 @@ using Serilog;
 namespace WebServer
 {
 
-    class RequestContext
+    public class RequestContext
     {
         public string HttpVersion { get; set; }
         public HttpMethods HttpMethod { get; set; }

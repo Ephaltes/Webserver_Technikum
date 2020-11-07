@@ -13,7 +13,7 @@ namespace WebServer
         public const string HTML = "text/html; charset=UTF-8";
     }
 
-    enum StatusCodes
+    public enum StatusCodes
     {
         OK = 200,
         Created=201,
@@ -25,7 +25,7 @@ namespace WebServer
         NotImplemented = 501
     }
 
-    class ResponseContext
+    public class ResponseContext
     {
 
         public byte[] ResponseHeader { get; set; }

@@ -6,12 +6,12 @@ using Serilog.Events;
 
 namespace WebServer.Model
 {
-    class MessageController : IMessageController
+    public class MessageModel : IMessageController
     {
         private readonly List<Message> messageList;
         private int lastid;
 
-        public MessageController()
+        public MessageModel()
         {
             messageList = new List<Message>();
         }

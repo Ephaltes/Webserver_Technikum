@@ -4,12 +4,12 @@ using System.Text;
 
 namespace WebServer.Model
 {
-    class Message
+    public class Message
     {
         public int id;
         public string message;
     }
-    interface IMessageController
+    public interface IMessageController
     {
         public List<Message> GetMessages();
         public Message GetMessage(int id);

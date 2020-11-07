@@ -10,11 +10,11 @@ using WebServer.Model;
 
 namespace WebServer.API
 {
-    class ApiController
+    public class ApiController
     {
         private readonly RequestContext _requestContext;
         private readonly ResponseContext _responseContext;
-        private static readonly MessageController MsgController = new MessageController();
+        private static readonly MessageModel MsgController = new MessageModel();
 
 
         public ApiController(TcpClient client)
