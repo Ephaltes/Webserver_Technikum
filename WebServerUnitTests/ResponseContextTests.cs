@@ -24,7 +24,7 @@ namespace WebServerUnitTests
             ResponseContext context = new ResponseContext();
             context.ResponseMessage.Add(new ResponseMessage(){Status = StatusCodes.OK,Id = 1,ErrorMessage = "Kein Error"});
             string ret = context.BuildResponse();
-            Assert.That(ret.Length == 195);
+            Assert.That(ret.Contains("Kein Error"));
         }
         
     }

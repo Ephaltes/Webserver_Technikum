@@ -23,7 +23,7 @@ namespace WebServer.RessourcenHandler
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException">is thrown when HttpVerb is not implemented</exception>
-        public override  ResponseContext Handle()
+        public override ResponseContext Handle()
         {
             ResponseContext responseContext;
             switch (_requestContext.HttpMethod)
