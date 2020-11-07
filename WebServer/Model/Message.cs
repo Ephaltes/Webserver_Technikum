@@ -26,7 +26,7 @@ namespace WebServer.Model
             return messageList.FirstOrDefault(a => a.id == id);
         }
 
-        public int Add(string message)
+        public Message Add(string message)
         {
             lastid++;
             Message temp = new Message
@@ -36,7 +36,7 @@ namespace WebServer.Model
             };
 
             messageList.Add(temp);
-            return temp.id;
+            return temp;
         }
 
         public bool Delete(int id)
