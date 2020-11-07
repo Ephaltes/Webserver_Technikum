@@ -17,7 +17,7 @@ namespace WebServer
 {
     class Program
     {
-        static SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        static SemaphoreSlim semaphore = new SemaphoreSlim(5);
 
         static void Main(string[] args)
         {
@@ -84,8 +84,8 @@ namespace WebServer
                 var responseMessage = controller.CreateResponse();
                 controller.Respond(responseMessage);
 
-                client.Close();
                 Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
+                client.Close();
             }
             catch (Exception e)
             {
