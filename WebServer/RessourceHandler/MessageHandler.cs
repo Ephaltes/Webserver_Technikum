@@ -90,6 +90,16 @@ namespace WebServer.RessourcenHandler
                     Object = msg,
                 });
             }
+
+            if (ret.Count == 0)
+            {
+                ret.Add(new ResponseMessage()
+                {
+                    Status = StatusCodes.OK,
+                    ErrorMessage = "No messages to read"
+                });
+            }
+            
             return ret;
         }
 
