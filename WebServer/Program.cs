@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 using WebServer.API;
+using WebServer.Model;
 
 namespace WebServer
 {
@@ -77,14 +78,14 @@ namespace WebServer
             Log.Debug("Waiting for a connection... ");
             try
             {
-                TcpClient client = server.AcceptTcpClient();
-                Log.Debug($"Client {client.Client.RemoteEndPoint} connected");
+                Model.TcpClient client = new Model.TcpClient(server.AcceptTcpClient());
+                Log.Debug($"Client {client.RemoteEndPoint} connected");
 
                 ApiController controller = new ApiController(client);
                 var responseMessage = controller.CreateResponse();
                 controller.Respond(responseMessage);
 
-                Log.Debug($"Client {client.Client.RemoteEndPoint} disconnected\r\n");
+                Log.Debug($"Client {client.RemoteEndPoint} disconnected\r\n");
                 client.Close();
             }
             catch (Exception e)

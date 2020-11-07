@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Serilog.Events;
+using WebServer.Interface;
 
 namespace WebServer.Model
 {
