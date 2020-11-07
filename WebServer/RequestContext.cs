@@ -25,8 +25,6 @@ namespace WebServer
 
 
         private const int HTTPVERB = 0;
-        private const string HTTPVERSIONSTRING = "HTTP";
-        private const string DEFAULTHTTPVERSION = "HTTP/1.0";
 
         public RequestContext(TcpClient client)
         {
