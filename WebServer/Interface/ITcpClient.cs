@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebServer.Interface
 {
+    /// <summary>
+    /// TcpClient Interface for Unittesting
+    /// </summary>
     public interface ITcpClient : IDisposable
     {
         Stream GetStream();
