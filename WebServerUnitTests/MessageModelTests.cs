@@ -37,7 +37,7 @@ namespace WebServerUnitTests
 
             var msg = model.GetMessages();
             
-            Assert.That(msg.Count >= 3);
+            Assert.That(msg.Count == 3);
         }
         
         [Test]
