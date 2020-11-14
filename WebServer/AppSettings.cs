@@ -22,8 +22,8 @@ namespace WebServer
         public string Host => Settings._host;
         public string Path => Settings._path;
 
-        public const int DEFAULTPORT = 50000;
-        public const string DEFAULTHOST = "localhost";
+        private const int DEFAULTPORT = 50000;
+        private const string DEFAULTHOST = "127.0.0.1";
 
         /// <summary>
         /// Singleton Instance of AppSettings

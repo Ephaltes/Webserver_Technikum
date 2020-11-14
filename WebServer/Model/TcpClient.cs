@@ -6,6 +6,9 @@ using WebServer.Interface;
 
 namespace WebServer.Model
 {
+    /// <summary>
+    /// TcpClient wrapper of the Interface for Unit testing
+    /// </summary>
     public class TcpClient : ITcpClient
     {
         private System.Net.Sockets.TcpClient _client;
@@ -32,6 +35,10 @@ namespace WebServer.Model
             _client.Close();
         }
 
+        /// <summary>
+        /// Own Read function to read from Client
+        /// </summary>
+        /// <returns></returns>
         public string ReadToEnd()
         {
             var stream = _client.GetStream();
