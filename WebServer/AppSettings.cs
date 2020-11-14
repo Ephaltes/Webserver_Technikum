@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace WebServer
 {
@@ -58,6 +59,7 @@ namespace WebServer
             catch (Exception e)
             {
                 _port = DEFAULTPORT;
+                Log.Debug("Port:" + _port);
             }
 
             _host = server.GetSection("Host").Value;
