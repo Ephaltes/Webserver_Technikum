@@ -64,7 +64,7 @@ namespace WebServer.API
         /// <exception cref="NotImplementedException">Throwen when a ressource is not recognized</exception>
         /// <exception cref="TargetParameterCountException">Wrong Parameter Count entered</exception>
         /// <exception cref="InvalidDataException">When no HttpBody is entered</exception>
-        public string CreateResponse()
+        public virtual string CreateResponse()
         {
             _responseContext = new ResponseContext();
             try
@@ -107,7 +107,7 @@ namespace WebServer.API
         /// Parse the Request to the Ressource Endpoint
         /// </summary>
         /// <returns></returns>
-        private ApiFunctionNames GetRequestedEndPoint()
+        protected virtual ApiFunctionNames GetRequestedEndPoint()
         {
             if (_requestContext.HttpRequest.Count <= 0 || !Enum.TryParse(_requestContext.HttpRequest[0], true, out ApiFunctionNames result))
                 return ApiFunctionNames.unknown;
