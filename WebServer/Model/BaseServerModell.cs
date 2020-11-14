@@ -88,7 +88,7 @@ namespace WebServer.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.Error(e.Message);
             }
 
             _semaphore.Release();

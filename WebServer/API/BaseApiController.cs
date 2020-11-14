@@ -88,6 +88,7 @@ namespace WebServer.API
                 });
 
                 _responseContext.StatusCode = StatusCodes.InternalServerError;
+                Log.Error(e.Message);
             }
 
             return _responseContext.BuildResponse();
