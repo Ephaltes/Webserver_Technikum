@@ -80,7 +80,7 @@ namespace WebServer.Model
                 Model.TcpClient client = new Model.TcpClient(_listener.AcceptTcpClient());
                 Log.Debug($"Client {client.RemoteEndPoint} connected");
 
-                BaseApiController controller = new BaseApiController(client);
+                ApiController controller = new ApiController(client);
                 controller.Respond(controller.CreateResponse());
 
                 Log.Debug($"Client {client.RemoteEndPoint} disconnected\r\n");
