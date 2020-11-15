@@ -13,7 +13,7 @@ namespace WebServer.Model
     /// <summary>
     /// ServerWrapper
     /// </summary>
-    public class ServerModell : IServer, IDisposable
+    public class BaseServerModell : IServer, IDisposable
     {
         private SemaphoreSlim _semaphore;
         private readonly TcpListener _listener;
@@ -26,7 +26,7 @@ namespace WebServer.Model
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <param name="port"></param>
-        public ServerModell(IPAddress ipAddress, int port)
+        public BaseServerModell(IPAddress ipAddress, int port)
         {
             _listener = new TcpListener(ipAddress, port);
             _taskList = new List<Task>();
@@ -80,7 +80,7 @@ namespace WebServer.Model
                 Model.TcpClient client = new Model.TcpClient(_listener.AcceptTcpClient());
                 Log.Debug($"Client {client.RemoteEndPoint} connected");
 
-                ApiController controller = new ApiController(client);
+                BaseApiController controller = new BaseApiController(client);
                 controller.Respond(controller.CreateResponse());
 
                 Log.Debug($"Client {client.RemoteEndPoint} disconnected\r\n");

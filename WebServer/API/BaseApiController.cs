@@ -17,7 +17,7 @@ namespace WebServer.API
     /// <summary>
     /// Class that Controls requestContext & responseContext by using MessageModel
     /// </summary>
-    public class ApiController
+    public class BaseApiController
     {
         /// <summary>
         /// HttpRequest Context
@@ -37,7 +37,7 @@ namespace WebServer.API
         private ITcpClient _client;
 
 
-        public ApiController(ITcpClient client)
+        public BaseApiController(ITcpClient client)
         {
             _client = client;
             ReceiveFromClient();

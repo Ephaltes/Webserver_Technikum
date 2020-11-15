@@ -15,13 +15,13 @@ namespace WebServerUnitTests
         [Test]
         public void MaxListenClients()
         {
-            ServerModell server = new ServerModell(IPAddress.Any, 55310);
+            BaseServerModell baseServer = new BaseServerModell(IPAddress.Any, 55310);
             int maxClient = 3;
           
-            server.Start();
+            baseServer.Start();
             Task.Run(() =>
             {
-                server.Listen(maxClient);
+                baseServer.Listen(maxClient);
             });
           
             var task = Task.Run(() =>
@@ -30,8 +30,8 @@ namespace WebServerUnitTests
             });
             task.Wait();
           
-            Assert.That(server.taskList.Count == maxClient);
-            server.Stop();
+            Assert.That(baseServer.taskList.Count == maxClient);
+            baseServer.Stop();
         }
     }
 }
