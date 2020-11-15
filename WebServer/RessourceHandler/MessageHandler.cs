@@ -30,17 +30,16 @@ namespace WebServer.RessourcenHandler
                 {
                     case HttpMethods.GET:
                         responseContext = HandleGet();
-                    break;
+                        break;
                     case HttpMethods.POST:
                         responseContext = HandlePost();
-                            break;
+                        break;
                     case HttpMethods.PUT:
                         responseContext = HandlePut();
-                        
-                            break;
+                        break;
                     case HttpMethods.DELETE:
                         responseContext = HandleDelete();
-                            break;
+                        break;
                     default:
                         throw new NotImplementedException("HttpMethod not Implemented");
                 }
