@@ -24,12 +24,12 @@ namespace WebServer
             StartLogger();
 
 
-            ServerModell server = null;
+            BaseServerModell baseServer = null;
             try
             {
-                server = new ServerModell(IPAddress.Parse(AppSettings.Settings.Host),AppSettings.Settings.Port);
-                server.Start();
-                server.Listen(5);
+                baseServer = new BaseServerModell(IPAddress.Parse(AppSettings.Settings.Host),AppSettings.Settings.Port);
+                baseServer.Start();
+                baseServer.Listen(5);
 
             }
 
@@ -44,10 +44,10 @@ namespace WebServer
 
             finally
             {
-                if(server != null)
+                if(baseServer != null)
                 {
-                    server.Stop();
-                    Task.WaitAll(server.taskList.ToArray()); 
+                    baseServer.Stop();
+                    Task.WaitAll(baseServer.taskList.ToArray()); 
                 }
             }
             Log.Debug("Server stopped...");

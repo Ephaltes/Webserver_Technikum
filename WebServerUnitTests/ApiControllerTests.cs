@@ -32,7 +32,7 @@ namespace WebServerUnitTests
             
             Mock<ITcpClient> mockTcp = new Mock<ITcpClient>();
             mockTcp.Setup(x => x.ReadToEnd()).Returns(header);
-            ApiController controller = new ApiController(mockTcp.Object);
+            BaseApiController controller = new BaseApiController(mockTcp.Object);
             
             
             var response = controller.CreateResponse();
@@ -62,7 +62,7 @@ namespace WebServerUnitTests
             
             Mock<ITcpClient> mockTcp = new Mock<ITcpClient>();
             mockTcp.Setup(x => x.ReadToEnd()).Returns(header);
-            ApiController controller = new ApiController(mockTcp.Object);
+            BaseApiController controller = new BaseApiController(mockTcp.Object);
             
             
             var response = controller.CreateResponse();
