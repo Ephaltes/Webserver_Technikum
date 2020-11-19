@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Serilog;
 using WebServer.Interface;
@@ -10,31 +12,32 @@ namespace WebServer.API
         /// <summary>
         /// HttpRequest Context
         /// </summary>
-        protected  RequestContext _requestContext;
+        protected  IRequestContext _requestContext;
         /// <summary>
         /// HttpResponse 
         /// </summary>
-        protected  ResponseContext _responseContext;
+        protected  IResponseContext _responseContext;
         /// <summary>
         /// Client that requested ressource
         /// </summary>
         protected ITcpClient _client;
 
+        protected List<string> _endpointList;
+
         /// <summary>
         /// Reading from Client and passing into requestContext for parsing
         /// </summary>
-        protected virtual void ReceiveFromClient()
+        protected virtual string ReceiveFromClient()
         {
             string data = _client.ReadToEnd();
 
             Log.Debug($"Received:\r\n{data}");
             // Process the data sent by the client.
-            
-            _requestContext = new RequestContext();
-            _requestContext.ParseRequestFromHeader(data);
+
+            return data;
         }
 
-        public abstract string CreateResponse();
+        public abstract string ForwardToEndPointHandler();
         
         /// <summary>
         /// Writes message to client 
@@ -50,13 +53,14 @@ namespace WebServer.API
         /// <summary>
         /// Parse the Request to the Ressource Endpoint
         /// </summary>
-        /// <returns></returns>
-        protected virtual ApiFunctionNames GetRequestedEndPoint()
+        /// <returns>EndPointName</returns>
+        protected virtual string GetRequestedEndPoint()
         {
-            if (_requestContext.HttpRequest.Count <= 0 || !Enum.TryParse(_requestContext.HttpRequest[0], true, out ApiFunctionNames result))
-                return ApiFunctionNames.unknown;
+            if (_requestContext.HttpRequest.Count <= 0 || 
+                !_endpointList.Any(x=>x.Equals(_requestContext.HttpRequest[0],StringComparison.OrdinalIgnoreCase)) )
+                return "";
 
-            return result;
+            return _requestContext.HttpRequest[0];
         }
     }
 }
