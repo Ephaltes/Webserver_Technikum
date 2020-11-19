@@ -57,7 +57,7 @@ namespace WebServer.API
         protected virtual string GetRequestedEndPoint()
         {
             if (_requestContext.HttpRequest.Count <= 0 || 
-                !_endpointList.Any(x=>x.Equals(_requestContext.HttpRequest[0],StringComparison.OrdinalIgnoreCase)) )
+                !_endpointList.Contains(_requestContext.HttpRequest[0],StringComparer.OrdinalIgnoreCase))
                 return "";
 
             return _requestContext.HttpRequest[0];
