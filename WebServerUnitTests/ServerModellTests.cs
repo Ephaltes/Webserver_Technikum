@@ -1,12 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using Moq;
 using NUnit.Framework;
-using WebServer;
-using WebServer.API;
-using WebServer.Interface;
 using WebServer.Model;
-using WebServer.RessourcenHandler;
 
 namespace WebServerUnitTests
 {
