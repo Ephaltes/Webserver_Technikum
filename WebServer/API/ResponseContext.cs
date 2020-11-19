@@ -5,22 +5,22 @@ using System.Text;
 using Newtonsoft.Json;
 using Serilog;
 using WebServer.API;
+using WebServer.Interface;
 
-namespace WebServer
+namespace WebServer.API
 {
     /// <summary>
     /// Mime Types for response
     /// </summary>
     public class MimeTypes
     {
-        public const string HTML = "text/html; charset=UTF-8";
         public const string JSON = "application/json; charset=UTF-8";
     }
 
     /// <summary>
     /// ResponseContext for client
     /// </summary>
-    public class ResponseContext
+    public class ResponseContext : IResponseContext
     {
 
         /// <summary>
@@ -42,16 +42,16 @@ namespace WebServer
         /// <summary>
         /// Length of HttpResponse Payload
         /// </summary>
-        private int ContentLength { get; set; }
+        public int ContentLength { get; set; }
         /// <summary>
         /// Payload
         /// </summary>
-        private string HttpBody { get; set; }
+        public string HttpBody { get; set; }
         /// <summary>
         /// HttpHeader
         /// </summary>
 
-        private string ResponseHeader { get; set; }
+        public string ResponseHeader { get; set; }
 
 
         public ResponseContext()
@@ -60,19 +60,10 @@ namespace WebServer
             StatusCode = StatusCodes.OK;
             ServerName = Constant.ServerName;
             ResponseMessage = new List<ResponseMessage>();
-        }
-
-        /// <summary>
-        /// Building Response header depending on Payload
-        /// </summary>
-        private void BuildHeader()
-        {
+            
             ResponseHeader = $"{Constant.DefaultHttpVersion} {(int) StatusCode}\r\n" +
-                              $"Server: {ServerName}\r\n";
-
-            if (ContentLength > 0)
-                ResponseHeader += $"Content-Type: {Mime}\r\n"
-                        +$"Content-Length: {ContentLength}\r\n\r\n";
+                             $"Server: {ServerName}\r\n";
+            
         }
 
         /// <summary>
@@ -87,13 +78,14 @@ namespace WebServer
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
-                
                 ContentLength = HttpBody.Length;
             }
-            
-            BuildHeader();
 
-            if (ContentLength == 0)
+            if (ContentLength > 0)
+                ResponseHeader += $"Content-Type: {Mime}\r\n"
+                                  +$"Content-Length: {ContentLength}\r\n\r\n";
+
+            if (ContentLength <= 0)
             {
                 Log.Debug($"Response:\r\n{ResponseHeader}");
                 return ResponseHeader;
