@@ -15,9 +15,9 @@ namespace WebServer.Model
     /// </summary>
     public class BaseServerModell : IServer, IDisposable
     {
-        private SemaphoreSlim _semaphore;
-        private readonly TcpListener _listener;
-        private readonly List<Task> _taskList;
+        protected SemaphoreSlim _semaphore;
+        protected readonly TcpListener _listener;
+        protected readonly List<Task> _taskList;
         public List<Task> taskList => _taskList;
         public bool IsRunning { get; set; } = false;
 
