@@ -11,15 +11,6 @@ namespace WebServer
         PUT,
         DELETE
     }
-    /// <summary>
-    /// Api Endpoint ressources
-    /// </summary>
-
-    public enum ApiFunctionNames
-    {
-        unknown,
-        messages,
-    }
 
     /// <summary>
     /// Server Constants

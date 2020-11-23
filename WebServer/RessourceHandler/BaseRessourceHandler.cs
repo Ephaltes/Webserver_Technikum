@@ -1,4 +1,6 @@
-﻿namespace WebServer.Interface
+﻿using WebServer.API;
+
+namespace WebServer.RessourceHandler
 {
     /// <summary>
     /// HandleClass that can handle Get/Post/Put/Delete Requests

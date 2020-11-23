@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WebServer.RequestContext" Collapsed="true">
+    <Position X="19.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAACIAAAAAAAAoAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>API\RequestContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.MimeTypes" Collapsed="true">
+    <Position X="16" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>API\ResponseContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.ResponseContext" Collapsed="true">
+    <Position X="14.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAIAAAAACAAAAAAABAAAAAABAAIAACBAAAAgA=</HashCode>
+      <FileName>API\ResponseContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.AppSettings" Collapsed="true">
+    <Position X="14.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAACAAoAgAAAAAAACAAACBAQgAAABAAAAAA=</HashCode>
+      <FileName>AppSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.Constant" Collapsed="true">
+    <Position X="17.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Constant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.Program" Collapsed="true">
+    <Position X="17.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.API.ApiController" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>API\ApiController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.API.BaseApiController" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAEAAAAAAAAAABABAAAAAAAgAAABAAAA=</HashCode>
+      <FileName>API\BaseApiController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.API.ResponseMessage" Collapsed="true">
+    <Position X="16" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAAEAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>API\ResponseMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.Interface.Message" Collapsed="true">
+    <Position X="19.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>Interface\IMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.Interface.BaseRessourceHandler" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAQA=</HashCode>
+      <FileName>RessourceHandler\BaseRessourceHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebServer.Model.BaseServerModell" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkAAAAAAACACAEAAAAAAQAAAIAAAIAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\BaseServerModell.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WebServer.Model.MessageModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACYAAAAAAAAAAAAAAAAAAAAAQAEEEAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Model\MessageModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.683" Collapsed="true" />
+  </Class>
+  <Class Name="WebServer.Model.TcpClient" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAEAAAAAAIYAAAAAAAAAAAAEAAACAAAA=</HashCode>
+      <FileName>Model\TcpClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WebServer.RessourcenHandler.MessageHandler" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACACAAAAAAAIAAAAAIAAABAAAAAIAAAAAAAAAAQA=</HashCode>
+      <FileName>RessourceHandler\MessageHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="WebServer.Interface.IMessage" Collapsed="true">
+    <Position X="9" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACYAAAAAAAAAAAAAAAAAAAAAAAEAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interface\IMessage.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WebServer.Interface.IServer" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACAAAEAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Interface\IServer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WebServer.Interface.ITcpClient" Collapsed="true">
+    <Position X="13" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAEAAACAAAA=</HashCode>
+      <FileName>Interface\ITcpClient.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="WebServer.HttpMethods" Collapsed="true">
+    <Position X="16.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAEAQAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Constant.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WebServer.ApiFunctionNames" Collapsed="true">
+    <Position X="20" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Constant.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WebServer.StatusCodes" Collapsed="true">
+    <Position X="18.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAIAAAAAAAgAAEAAAAAAAEAAAQAAAABAAAEAAA=</HashCode>
+      <FileName>Constant.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
