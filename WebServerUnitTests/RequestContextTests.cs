@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using NUnit.Framework;
 using WebServer;
+using WebServer.API;
 using WebServer.Model;
 
 namespace WebServerUnitTests

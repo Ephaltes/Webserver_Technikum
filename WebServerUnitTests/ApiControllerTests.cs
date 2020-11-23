@@ -4,7 +4,6 @@ using WebServer;
 using WebServer.API;
 using WebServer.Interface;
 using WebServer.Model;
-using WebServer.RessourcenHandler;
 
 namespace WebServerUnitTests
 {
@@ -27,15 +26,18 @@ namespace WebServerUnitTests
                 "Sec-Fetch-Dest: document\r\n" +
                 "Accept-Encoding: gzip, deflate, br\r\n" +
                 "Accept-Language: en-US,en;q=0.9\r\n" +
+                "Content-Length: 33\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n"+
                 "sec-gpc: 1\r\n\r\n"+
-                "Meine Nachricht";
+                "Meine Nachricht\r\n"+
+                "Meine Nachricht2";
             
             Mock<ITcpClient> mockTcp = new Mock<ITcpClient>();
             mockTcp.Setup(x => x.ReadToEnd()).Returns(header);
             ApiController controller = new ApiController(mockTcp.Object);
             
             
-            var response = controller.CreateResponse();
+            var response = controller.ForwardToEndPointHandler();
             
             Assert.That(!response.Contains(StatusCodes.InternalServerError.ToString("D")));
         }
@@ -65,7 +67,7 @@ namespace WebServerUnitTests
             ApiController controller = new ApiController(mockTcp.Object);
             
             
-            var response = controller.CreateResponse();
+            var response = controller.ForwardToEndPointHandler();
             
             Assert.That(response.Contains(StatusCodes.InternalServerError.ToString("D")));
         }
