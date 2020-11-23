@@ -9,7 +9,7 @@ using System.Text;
 using Serilog;
 using WebServer.Interface;
 using WebServer.Model;
-using WebServer.RessourcenHandler;
+using WebServer.RessourceHandler;
 using TcpClient = WebServer.Model.TcpClient;
 
 namespace WebServer.API
@@ -23,12 +23,12 @@ namespace WebServer.API
         /// <summary>
         /// In Memory MessageList
         /// </summary>
-        private static readonly MessageModel MsgModel = new MessageModel();
+        private static readonly IMessage MsgModel = new MessageModel();
 
         public ApiController(ITcpClient client)
         {
             _client = client;
-            ReceiveFromClient();
+            _endpointList = new List<string>(){"messages"};
         }
         
         /// <summary>
@@ -38,19 +38,31 @@ namespace WebServer.API
         /// <exception cref="NotImplementedException">Throwen when a ressource is not recognized</exception>
         /// <exception cref="TargetParameterCountException">Wrong Parameter Count entered</exception>
         /// <exception cref="InvalidDataException">When no HttpBody is entered</exception>
-        public override string CreateResponse()
+        public override string ForwardToEndPointHandler()
         {
             _responseContext = new ResponseContext();
             try
             {
+                _requestContext = new RequestContext();
+                string data = ReceiveFromClient();
+
+                _requestContext.ParseRequestFromHeader(data);
+                
                 switch (GetRequestedEndPoint())
                 {
-                    case ApiFunctionNames.messages:
+                    case "messages":
                         MessageHandler handler = new MessageHandler(_requestContext,MsgModel);
                         _responseContext = handler.Handle();
                         break;
                     default:
-                        throw new NotImplementedException("Unknown Ressource");
+                        _responseContext.ResponseMessage.Add(new ResponseMessage()
+                        {
+                            ErrorMessage = "Unknown Endpoint",
+                            Status = StatusCodes.InternalServerError
+                        });
+
+                        _responseContext.StatusCode = StatusCodes.InternalServerError;
+                        break;
                 }
             }
             catch (Exception e)

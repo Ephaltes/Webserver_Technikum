@@ -10,7 +10,7 @@ using WebServer;
 using WebServer.API;
 using WebServer.Interface;
 using WebServer.Model;
-using WebServer.RessourcenHandler;
+using WebServer.RessourceHandler;
 
 namespace WebServerUnitTests
 {
@@ -19,14 +19,14 @@ namespace WebServerUnitTests
         [Test]
         public void GetMessages()
         {
-            RequestContext context = new RequestContext() 
-                {
-                    HttpBody = "Meine Nachricht" , 
-                    HttpRequest = new List<string>() {"messages"},
-                    HttpMethod = HttpMethods.GET,HttpVersion = "Http/4.0"
-                };
-            MessageModel messageModel = new MessageModel();
-            MessageHandler handler = new MessageHandler(context,messageModel);
+            
+            Mock<IRequestContext> context = new Mock<IRequestContext>();
+            context.SetupGet(x => x.HttpBody).Returns("Meine Nachricht");
+            context.SetupGet(x => x.HttpRequest).Returns(new List<string>() {"messages"});
+            context.SetupGet(x => x.HttpMethod).Returns(HttpMethods.GET);
+            
+            IMessage messageModel = new MessageModel();
+            MessageHandler handler = new MessageHandler(context.Object,messageModel);
 
             var response = handler.Handle();
             
@@ -36,14 +36,13 @@ namespace WebServerUnitTests
         [Test]
         public void PostMessage()
         {
-            RequestContext context = new RequestContext() 
-            {
-                HttpBody = "Meine Nachricht" , 
-                HttpRequest = new List<string>() {"messages"},
-                HttpMethod = HttpMethods.POST,HttpVersion = "Http/4.0"
-            };
+            Mock<IRequestContext> context = new Mock<IRequestContext>();
+            context.SetupGet(x => x.HttpBody).Returns("Meine Nachricht");
+            context.SetupGet(x => x.HttpRequest).Returns(new List<string>() {"messages","1"});
+            context.SetupGet(x => x.HttpMethod).Returns(HttpMethods.POST);
+            
             MessageModel messageModel = new MessageModel();
-            MessageHandler handler = new MessageHandler(context,messageModel);
+            MessageHandler handler = new MessageHandler(context.Object,messageModel);
 
             var response = handler.Handle();
             
@@ -53,15 +52,14 @@ namespace WebServerUnitTests
         [Test]
         public void DeleteMessage()
         {
-            RequestContext context = new RequestContext() 
-            {
-                HttpBody = "Meine Nachricht" , 
-                HttpRequest = new List<string>() {"messages","1"},
-                HttpMethod = HttpMethods.DELETE,HttpVersion = "Http/4.0"
-            };
+            Mock<IRequestContext> context = new Mock<IRequestContext>();
+            context.SetupGet(x => x.HttpBody).Returns("Meine Nachricht");
+            context.SetupGet(x => x.HttpRequest).Returns(new List<string>() {"messages","1"});
+            context.SetupGet(x => x.HttpMethod).Returns(HttpMethods.DELETE);
+            
             MessageModel messageModel = new MessageModel();
             messageModel.Add("test");
-            MessageHandler handler = new MessageHandler(context,messageModel);
+            MessageHandler handler = new MessageHandler(context.Object,messageModel);
 
             var response = handler.Handle();
             
@@ -73,20 +71,19 @@ namespace WebServerUnitTests
         {
            
 
-            RequestContext context = new RequestContext() 
-            {
-                HttpBody = "Meine Nachricht" , 
-                HttpRequest = new List<string>() {"messages","1"},
-                HttpMethod = HttpMethods.PUT,HttpVersion = "Http/4.0"
-            };
+            Mock<IRequestContext> context = new Mock<IRequestContext>();
+            context.SetupGet(x => x.HttpBody).Returns("Meine Nachricht");
+            context.SetupGet(x => x.HttpRequest).Returns(new List<string>() {"messages","1"});
+            context.SetupGet(x => x.HttpMethod).Returns(HttpMethods.PUT);
+            
             MessageModel messageModel = new MessageModel();
             messageModel.Add("test");
-            MessageHandler handler = new MessageHandler(context,messageModel);
+            MessageHandler handler = new MessageHandler(context.Object,messageModel);
 
             var response = handler.Handle();
             
             Assert.That(response.StatusCode == StatusCodes.OK 
                         && response.ResponseMessage[0].Id== 1);
-        }
+        } 
     }
 }

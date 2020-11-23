@@ -6,14 +6,14 @@ using WebServer.API;
 using WebServer.Interface;
 using WebServer.Model;
 
-namespace WebServer.RessourcenHandler
+namespace WebServer.RessourceHandler
 {
     public class MessageHandler : BaseRessourceHandler
     {
 
-        private RequestContext _requestContext;
-        private MessageModel _messageModel;
-        public MessageHandler(RequestContext req, MessageModel model)
+        private IRequestContext _requestContext;
+        private IMessage _messageModel;
+        public MessageHandler(IRequestContext req, IMessage model)
         {
             _requestContext = req;
             _messageModel = model;
