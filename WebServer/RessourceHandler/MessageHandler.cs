@@ -60,7 +60,7 @@ namespace WebServer.RessourceHandler
                 return new ResponseMessage()
                 {
                     ErrorMessage = "Message not Found",
-                    Status = StatusCodes.BadRequest
+                    Status = StatusCodes.NotFound
                 };
             }
 
