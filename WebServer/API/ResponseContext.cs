@@ -75,10 +75,25 @@ namespace WebServer.API
         {
             if (ResponseMessage.Count > 0)
             {
-                HttpBody = JsonConvert.SerializeObject(ResponseMessage,Formatting.Indented,new JsonSerializerSettings()
+                if (Mime == MimeTypes.JSON)
                 {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
+                    HttpBody = JsonConvert.SerializeObject(ResponseMessage,Formatting.Indented,new JsonSerializerSettings()
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                }
+                else
+                {
+                    HttpBody = "";
+                    foreach (var message in ResponseMessage)
+                    {
+                        HttpBody += message.ErrorMessage + Environment.NewLine;
+                        HttpBody += message.Object + Environment.NewLine;
+                        HttpBody += message.Status + Environment.NewLine;
+                        HttpBody += message.Id + Environment.NewLine;
+                    }
+                }
+              
                 ContentLength = HttpBody.Length;
             }
 
