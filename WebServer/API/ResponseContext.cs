@@ -15,6 +15,7 @@ namespace WebServer.API
     public class MimeTypes
     {
         public const string JSON = "application/json; charset=UTF-8";
+        public const string PLAINTEXT = "text/plain; charset=UTF-8";
     }
 
     /// <summary>
